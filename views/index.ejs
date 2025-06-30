@@ -1,11 +1,81 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GymApp - Gestión de Gimnasio</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏋️ GymApp</h1>
+            <p>Sistema de Gestión de Gimnasio</p>
+        </header>
+
+        <main>
+            <div class="grid">
+                <!-- Módulo de Clientes -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>👥 Clientes</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Administra la información de todos los clientes del gimnasio.</p>
+                        <ul style="margin-top: 15px; padding-left: 20px; color: #666;">
+                            <li>Registrar nuevos clientes</li>
+                            <li>Ver información detallada</li>
+                            <li>Editar datos personales</li>
+                            <li>Gestionar membresías</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <a href="/clientes" class="btn btn-primary">Ver Clientes</a>
+                        <a href="/clientes/crear" class="btn btn-success">Nuevo Cliente</a>
+                    </div>
+                </div>
+
+                <!-- Módulo de Membresías -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🎫 Membresías</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Controla las membresías y suscripciones de los clientes.</p>
+                        <ul style="margin-top: 15px; padding-left: 20px; color: #666;">
+                            <li>Crear nuevas membresías</li>
+                            <li>Ver membresías activas</li>
+                            <li>Gestionar fechas de vencimiento</li>
+                            <li>Controlar estados</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <a href="/membresias" class="btn btn-primary">Ver Membresías</a>
+                        <a href="/membresias/crear" class="btn btn-success">Nueva Membresía</a>
+                    </div>
+                </div>
+
+                <!-- Módulo de Pagos -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>💰 Pagos</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Administra los pagos y transacciones del gimnasio.</p>
+                        <ul style="margin-top: 15px; padding-left: 20px; color: #666;">
+                            <li>Registrar nuevos pagos</li>
+                            <li>Ver historial de pagos</li>
+                            <li>Consultar estadísticas</li>
+                            <li>Gestionar métodos de pago</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <a href="/pagos" class="btn btn-primary">Ver Pagos</a>
+                        <a href="/pagos/crear" class="btn btn-success">Nuevo Pago</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
 </html>
