@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Cliente - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Detalle del Cliente</h1>
+            <nav>
+                <a href="/" class="btn">Inicio</a>
+                <a href="/clientes" class="btn">Volver a Clientes</a>
+                <a href="/clientes/<%= cliente.id %>/editar" class="btn btn-warning">Editar</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="detail-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><%= cliente.nombre %></h2>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Email:</strong> <%= cliente.email %></p>
+                        <p><strong>Teléfono:</strong> <%= cliente.telefono %></p>
+                        <p><strong>ID:</strong> <%= cliente.id %></p>
+                    </div>
+                </div>
+
+                <!-- Membresías del cliente -->
+                <div class="section">
+                    <h3>Membresías</h3>
+                    <% if (cliente.membresias && cliente.membresias.length > 0) { %>
+                        <div class="grid">
+                            <% cliente.membresias.forEach(membresia => { %>
+                                <div class="card card-small">
+                                    <div class="card-header">
+                                        <h4><%= membresia.tipo %></h4>
+                                        <span class="status <%= membresia.estado.toLowerCase() %>">
+                                            <%= membresia.estado %>
+                                        </span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>Inicio:</strong> <%= new Date(membresia.fechaInicio).toLocaleDateString('es-ES') %></p>
+                                        <p><strong>Vencimiento:</strong> <%= new Date(membresia.fechaVencimiento).toLocaleDateString('es-ES') %></p>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p class="empty-message">No tiene membresías registradas.</p>
+                    <% } %>
+                </div>
+
+                <!-- Pagos del cliente -->
+                <div class="section">
+                    <h3>Pagos</h3>
+                    <% if (cliente.pagos && cliente.pagos.length > 0) { %>
+                        <div class="grid">
+                            <% cliente.pagos.forEach(pago => { %>
+                                <div class="card card-small">
+                                    <div class="card-header">
+                                        <h4>$<%= parseFloat(pago.monto).toFixed(2) %></h4>
+                                        <span class="method"><%= pago.metodoPago %></span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>Fecha:</strong> <%= new Date(pago.fechaPago).toLocaleDateString('es-ES') %></p>
+                                        <p><strong>Método:</strong> <%= pago.metodoPago %></p>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p class="empty-message">No tiene pagos registrados.</p>
+                    <% } %>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

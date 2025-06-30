@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Listado de Clientes</h1>
+            <nav>
+                <a href="/" class="btn">Inicio</a>
+                <a href="/clientes/crear" class="btn btn-primary">Nuevo Cliente</a>
+            </nav>
+        </header>
+
+        <main>
+            <% if (clientes && clientes.length > 0) { %>
+                <div class="grid">
+                    <% clientes.forEach(cliente => { %>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><%= cliente.nombre %></h3>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Email:</strong> <%= cliente.email %></p>
+                                <p><strong>Teléfono:</strong> <%= cliente.telefono %></p>
+                            </div>
+                            <div class="card-actions">
+                                <a href="/clientes/<%= cliente.id %>" class="btn btn-info">Ver Detalles</a>
+                                <a href="/clientes/<%= cliente.id %>/editar" class="btn btn-warning">Editar</a>
+                                <button onclick="eliminarCliente(<%= cliente.id %>)" class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <h2>No hay clientes registrados</h2>
+                    <p>Comienza agregando tu primer cliente.</p>
+                    <a href="/clientes/crear" class="btn btn-primary">Crear Cliente</a>
+                </div>
+            <% } %>
+        </main>
+    </div>
+
+    <script>
+        function eliminarCliente(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar este cliente? Esta acción no se puede deshacer.')) {
+                fetch(`/clientes/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.mensaje) {
+                        alert(data.mensaje);
+                        location.reload();
+                    } else {
+                        alert('Error al eliminar el cliente');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar el cliente');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
