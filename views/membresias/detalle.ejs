@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Membresía - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Detalle de la Membresía</h1>
+            <nav>
+                <a href="/" class="btn">Inicio</a>
+                <a href="/membresias" class="btn">Volver a Membresías</a>
+                <a href="/membresias/<%= membresia.id %>/editar" class="btn btn-warning">Editar</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="detail-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><%= membresia.tipo %></h2>
+                        <span class="status <%= membresia.estado.toLowerCase() %>">
+                            <%= membresia.estado %>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Cliente:</strong> <%= membresia.clienteNombre %></p>
+                        <p><strong>Fecha de Inicio:</strong> <%= new Date(membresia.fechaInicio).toLocaleDateString('es-ES') %></p>
+                        <p><strong>Fecha de Vencimiento:</strong> <%= new Date(membresia.fechaVencimiento).toLocaleDateString('es-ES') %></p>
+                        <p><strong>Estado:</strong> <%= membresia.estado %></p>
+                        <p><strong>ID:</strong> <%= membresia.id %></p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

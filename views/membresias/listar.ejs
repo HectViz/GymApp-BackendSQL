@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membresías - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Listado de Membresías</h1>
+            <nav>
+                <a href="/" class="btn">Inicio</a>
+                <a href="/membresias/crear" class="btn btn-primary">Nueva Membresía</a>
+            </nav>
+        </header>
+
+        <main>
+            <% if (membresias && membresias.length > 0) { %>
+                <div class="grid">
+                    <% membresias.forEach(membresia => { %>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><%= membresia.tipo %></h3>
+                                <span class="status <%= membresia.estado.toLowerCase() %>">
+                                    <%= membresia.estado %>
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Cliente:</strong> <%= membresia.clienteNombre %></p>
+                                <p><strong>Inicio:</strong> <%= new Date(membresia.fechaInicio).toLocaleDateString('es-ES') %></p>
+                                <p><strong>Vencimiento:</strong> <%= new Date(membresia.fechaVencimiento).toLocaleDateString('es-ES') %></p>
+                            </div>
+                            <div class="card-actions">
+                                <a href="/membresias/<%= membresia.id %>" class="btn btn-info">Ver Detalles</a>
+                                <a href="/membresias/<%= membresia.id %>/editar" class="btn btn-warning">Editar</a>
+                                <button onclick="eliminarMembresia(<%= membresia.id %>)" class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <h2>No hay membresías registradas</h2>
+                    <p>Comienza agregando tu primera membresía.</p>
+                    <a href="/membresias/crear" class="btn btn-primary">Crear Membresía</a>
+                </div>
+            <% } %>
+        </main>
+    </div>
+
+    <script>
+        function eliminarMembresia(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta membresía? Esta acción no se puede deshacer.')) {
+                fetch(`/membresias/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.mensaje) {
+                        alert(data.mensaje);
+                        location.reload();
+                    } else {
+                        alert('Error al eliminar la membresía');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar la membresía');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

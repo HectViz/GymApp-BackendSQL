@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Membresía - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Editar Membresía</h1>
+            <nav>
+                <a href="/" class="btn">Inicio</a>
+                <a href="/membresias" class="btn">Volver a Membresías</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="form-container">
+                <form action="/membresias/<%= membresia.id %>?_method=PUT" method="POST" class="form">
+                    <div class="form-group">
+                        <label for="clienteId">Cliente:</label>
+                        <select id="clienteId" name="clienteId" required>
+                            <option value="">Seleccione un cliente</option>
+                            <% clientes.forEach(cliente => { %>
+                                <option value="<%= cliente.id %>" <%= cliente.id == membresia.clienteId ? 'selected' : '' %>>
+                                    <%= cliente.nombre %> - <%= cliente.email %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo">Tipo de Membresía:</label>
+                        <select id="tipo" name="tipo" required>
+                            <option value="">Seleccione el tipo</option>
+                            <option value="Mensual" <%= membresia.tipo == 'Mensual' ? 'selected' : '' %>>Mensual</option>
+                            <option value="Trimestral" <%= membresia.tipo == 'Trimestral' ? 'selected' : '' %>>Trimestral</option>
+                            <option value="Semestral" <%= membresia.tipo == 'Semestral' ? 'selected' : '' %>>Semestral</option>
+                            <option value="Anual" <%= membresia.tipo == 'Anual' ? 'selected' : '' %>>Anual</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaInicio">Fecha de Inicio:</label>
+                        <input type="date" id="fechaInicio" name="fechaInicio" value="<%= membresia.fechaInicio %>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaVencimiento">Fecha de Vencimiento:</label>
+                        <input type="date" id="fechaVencimiento" name="fechaVencimiento" value="<%= membresia.fechaVencimiento %>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estado">Estado:</label>
+                        <select id="estado" name="estado" required>
+                            <option value="Activa" <%= membresia.estado == 'Activa' ? 'selected' : '' %>>Activa</option>
+                            <option value="Vencida" <%= membresia.estado == 'Vencida' ? 'selected' : '' %>>Vencida</option>
+                            <option value="Cancelada" <%= membresia.estado == 'Cancelada' ? 'selected' : '' %>>Cancelada</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Actualizar Membresía</button>
+                        <a href="/membresias" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Validación del formulario
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const clienteId = document.getElementById('clienteId').value;
+            const tipo = document.getElementById('tipo').value;
+            const fechaInicio = document.getElementById('fechaInicio').value;
+            const fechaVencimiento = document.getElementById('fechaVencimiento').value;
+            const estado = document.getElementById('estado').value;
+
+            if (!clienteId || !tipo || !fechaInicio || !fechaVencimiento || !estado) {
+                e.preventDefault();
+                alert('Por favor, complete todos los campos');
+                return;
+            }
+
+            // Validar que la fecha de vencimiento sea posterior a la de inicio
+            if (new Date(fechaVencimiento) <= new Date(fechaInicio)) {
+                e.preventDefault();
+                alert('La fecha de vencimiento debe ser posterior a la fecha de inicio');
+                return;
+            }
+        });
+    </script>
+</body>
+</html> 
