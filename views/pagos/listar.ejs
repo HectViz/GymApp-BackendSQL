@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagos - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Listado de Pagos</h1>
+            <nav>
+                <a href="/" class="btn">Inicio</a>
+                <a href="/pagos/crear" class="btn btn-primary">Nuevo Pago</a>
+                <a href="/pagos/estadisticas" class="btn btn-success">Ver Estadísticas</a>
+            </nav>
+        </header>
+
+        <main>
+            <% if (pagos && pagos.length > 0) { %>
+                <div class="grid">
+                    <% pagos.forEach(pago => { %>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>$<%= parseFloat(pago.monto).toFixed(2) %></h3>
+                                <span class="method <%= pago.metodoPago.toLowerCase() %>">
+                                    <%= pago.metodoPago %>
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Cliente:</strong> <%= pago.clienteNombre %></p>
+                                <p><strong>Fecha:</strong> <%= new Date(pago.fechaPago).toLocaleDateString('es-ES') %></p>
+                                <p><strong>Método:</strong> <%= pago.metodoPago %></p>
+                                <p><strong>ID:</strong> <%= pago.id %></p>
+                            </div>
+                            <div class="card-actions">
+                                <a href="/pagos/<%= pago.id %>" class="btn btn-info">Ver Detalles</a>
+                                <a href="/pagos/<%= pago.id %>/editar" class="btn btn-warning">Editar</a>
+                                <button onclick="eliminarPago(<%= pago.id %>)" class="btn btn-danger">Eliminar</button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <h2>No hay pagos registrados</h2>
+                    <p>Comienza agregando tu primer pago.</p>
+                    <a href="/pagos/crear" class="btn btn-primary">Crear Pago</a>
+                </div>
+            <% } %>
+        </main>
+    </div>
+
+    <script>
+        function eliminarPago(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar este pago? Esta acción no se puede deshacer.')) {
+                fetch(`/pagos/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.mensaje) {
+                        alert(data.mensaje);
+                        location.reload();
+                    } else {
+                        alert('Error al eliminar el pago');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar el pago');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
