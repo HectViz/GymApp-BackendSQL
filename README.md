@@ -46,7 +46,7 @@ Este proyecto fue desarrollado como asignatura universitaria para la materia de 
 
 1. **Clonar el repositorio**
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/HectViz/GymApp-BackendSQL.git
    cd gymapp
    ```
 
