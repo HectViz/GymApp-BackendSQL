@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrador - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👨‍💼 Dashboard Administrador</h1>
+            <p>Bienvenido, <%= user.email %></p>
+            <nav>
+                <a href="/" class="btn">Inicio</a>
+                <form action="/auth/logout" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                </form>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Estadísticas rápidas -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number"><%= stats.clientes %></div>
+                    <div class="stat-label">Clientes Registrados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number"><%= stats.membresiasActivas %></div>
+                    <div class="stat-label">Membresías Activas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$<%= parseFloat(stats.totalPagos).toFixed(2) %></div>
+                    <div class="stat-label">Total de Pagos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number"><%= stats.pagosCount %></div>
+                    <div class="stat-label">Pagos Realizados</div>
+                </div>
+            </div>
+
+            <!-- Acciones rápidas -->
+            <div class="quick-actions">
+                <h2>Acciones Rápidas</h2>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>👥 Gestión de Clientes</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Administra todos los clientes del gimnasio</p>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/admin/clientes" class="btn btn-primary">Ver Clientes</a>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🎫 Gestión de Membresías</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Controla las membresías y suscripciones</p>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/admin/membresias" class="btn btn-primary">Ver Membresías</a>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>💰 Gestión de Pagos</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Administra los pagos y transacciones</p>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/admin/pagos" class="btn btn-primary">Ver Pagos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Últimos clientes registrados -->
+            <div class="recent-section">
+                <h2>Últimos Clientes Registrados</h2>
+                <% if (ultimosClientes && ultimosClientes.length > 0) { %>
+                    <div class="grid">
+                        <% ultimosClientes.forEach(cliente => { %>
+                            <div class="card card-small">
+                                <div class="card-header">
+                                    <h4><%= cliente.nombre %></h4>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Email:</strong> <%= cliente.email %></p>
+                                    <p><strong>Registrado:</strong> <%= new Date(cliente.created_at).toLocaleDateString('es-ES') %></p>
+                                </div>
+                                <div class="card-actions">
+                                    <a href="/admin/clientes/<%= cliente.id %>" class="btn btn-info btn-small">Ver</a>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <p class="empty-message">No hay clientes registrados recientemente.</p>
+                <% } %>
+            </div>
+
+            <!-- Últimos pagos -->
+            <div class="recent-section">
+                <h2>Últimos Pagos</h2>
+                <% if (ultimosPagos && ultimosPagos.length > 0) { %>
+                    <div class="grid">
+                        <% ultimosPagos.forEach(pago => { %>
+                            <div class="card card-small">
+                                <div class="card-header">
+                                    <h4>$<%= parseFloat(pago.monto).toFixed(2) %></h4>
+                                    <span class="method <%= pago.metodoPago.toLowerCase() %>">
+                                        <%= pago.metodoPago %>
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Cliente:</strong> <%= pago.clienteNombre %></p>
+                                    <p><strong>Fecha:</strong> <%= new Date(pago.fechaPago).toLocaleDateString('es-ES') %></p>
+                                </div>
+                                <div class="card-actions">
+                                    <a href="/admin/pagos/<%= pago.id %>" class="btn btn-info btn-small">Ver</a>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <p class="empty-message">No hay pagos registrados recientemente.</p>
+                <% } %>
+            </div>
+        </main>
+    </div>
+</body>
+</html> 
