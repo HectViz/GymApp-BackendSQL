@@ -4,7 +4,7 @@ class Cliente {
   // OBTENER TODOS
   static async findAll() {
     try {
-      const [rows] = await pool.execute('SELECT * FROM clientes ORDER BY nombre');
+      const [rows] = await pool.execute('SELECT id, nombre, email, telefono, rol, created_at FROM clientes ORDER BY nombre');
       return rows;
     } catch (error) {
       throw new Error(`Error obteniendo clientes: ${error.message}`);
@@ -21,15 +21,25 @@ class Cliente {
     }
   }
 
+  // OBTENER POR EMAIL
+  static async findByEmail(email) {
+    try {
+      const [rows] = await pool.execute('SELECT * FROM clientes WHERE email = ?', [email]);
+      return rows[0];
+    } catch (error) {
+      throw new Error(`Error obteniendo cliente por email: ${error.message}`);
+    }
+  }
+
   // CREAR NUEVO
   static async create(clienteData) {
     try {
-      const { nombre, email, telefono } = clienteData;
+      const { nombre, email, telefono, password, rol = 'usuario' } = clienteData;
       const [result] = await pool.execute(
-        'INSERT INTO clientes (nombre, email, telefono) VALUES (?, ?, ?)',
-        [nombre, email, telefono]
+        'INSERT INTO clientes (nombre, email, telefono, password, rol) VALUES (?, ?, ?, ?, ?)',
+        [nombre, email, telefono, password, rol]
       );
-      return { id: result.insertId, nombre, email, telefono };
+      return { id: result.insertId, nombre, email, telefono, rol };
     } catch (error) {
       throw new Error(`Error creando cliente: ${error.message}`);
     }
@@ -38,11 +48,18 @@ class Cliente {
   // ACTUALIZAR
   static async update(id, clienteData) {
     try {
-      const { nombre, email, telefono } = clienteData;
-      const [result] = await pool.execute(
-        'UPDATE clientes SET nombre = ?, email = ?, telefono = ? WHERE id = ?',
-        [nombre, email, telefono, id]
-      );
+      const { nombre, email, telefono, password, rol } = clienteData;
+      let query, params;
+      
+      if (password) {
+        query = 'UPDATE clientes SET nombre = ?, email = ?, telefono = ?, password = ?, rol = ? WHERE id = ?';
+        params = [nombre, email, telefono, password, rol, id];
+      } else {
+        query = 'UPDATE clientes SET nombre = ?, email = ?, telefono = ?, rol = ? WHERE id = ?';
+        params = [nombre, email, telefono, rol, id];
+      }
+      
+      const [result] = await pool.execute(query, params);
       return result.affectedRows > 0;
     } catch (error) {
       throw new Error(`Error actualizando cliente: ${error.message}`);
@@ -86,6 +103,16 @@ class Cliente {
       };
     } catch (error) {
       throw new Error(`Error obteniendo cliente con relaciones: ${error.message}`);
+    }
+  }
+
+  // OBTENER CLIENTES POR ROL
+  static async findByRol(rol) {
+    try {
+      const [rows] = await pool.execute('SELECT id, nombre, email, telefono, rol, created_at FROM clientes WHERE rol = ? ORDER BY nombre', [rol]);
+      return rows;
+    } catch (error) {
+      throw new Error(`Error obteniendo clientes por rol: ${error.message}`);
     }
   }
 }
