@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Denegado - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚫 Acceso Denegado</h1>
+            <nav>
+                <a href="/" class="btn">Inicio</a>
+                <a href="/auth/login" class="btn btn-primary">Iniciar Sesión</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="error-container">
+                <div class="error-icon">
+                    <h2>⚠️</h2>
+                </div>
+                
+                <div class="error-content">
+                    <h2>No tienes permisos para acceder a esta página</h2>
+                    
+                    <div class="error-details">
+                        <% if (error && error.message) { %>
+                            <p><strong>Error:</strong> <%= error.message %></p>
+                        <% } %>
+                        
+                        <p>Esta página requiere permisos de administrador o autenticación previa.</p>
+                    </div>
+
+                    <div class="error-actions">
+                        <div class="action-buttons">
+                            <a href="/auth/login" class="btn btn-primary">Iniciar Sesión</a>
+                            <a href="/" class="btn btn-secondary">Volver al Inicio</a>
+                        </div>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>¿Necesitas ayuda?</h3>
+                        <ul>
+                            <li>Si eres administrador, inicia sesión con tus credenciales</li>
+                            <li>Si eres cliente, inicia sesión con tu cuenta de cliente</li>
+                            <li>Si no tienes cuenta, puedes registrarte como cliente</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html> 
