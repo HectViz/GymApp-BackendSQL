@@ -6,10 +6,12 @@ var logger = require('morgan');
 var methodOverride = require('method-override');
 
 // SE CONFIGURA LA BASE DE DATOS
-const { testConnection, initDatabase } = require('./config/db');
+const { testConnection, initDatabase, createDefaultAdmin } = require('./config/db');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var authRouter = require('./routes/auth');
+var adminRouter = require('./routes/admin');
+var clienteRouter = require('./routes/cliente');
 
 var app = express();
 
@@ -28,6 +30,7 @@ async function initializeApp() {
   try {
     await testConnection();
     await initDatabase();
+    await createDefaultAdmin();
     console.log('✅ Aplicación inicializada correctamente');
   } catch (error) {
     console.error('❌ Error inicializando la aplicación:', error);
@@ -36,14 +39,21 @@ async function initializeApp() {
 
 initializeApp();
 
+// RUTAS PUBLICAS OJO
 app.use('/', indexRouter);
+app.use('/auth', authRouter);
+
+// RUTAS PROTEGIDAS
+app.use('/admin', adminRouter);
+app.use('/cliente', clienteRouter);
+
+// RUTAS ANTERIORES MANTENIENDO LA COMPATIBILIDAD
 const clientesRouter = require('./routes/clientes');
 app.use('/clientes', clientesRouter);
 const membresiasRouter = require('./routes/membresias');
 app.use('/membresias', membresiasRouter);
 const pagosRouter = require('./routes/pagos');
 app.use('/pagos', pagosRouter);
-app.use('/users', usersRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));
