@@ -11,9 +11,8 @@
         <header>
             <h1>Listado de Pagos</h1>
             <nav>
-                <a href="/" class="btn">Inicio</a>
+                <a href="/admin/dashboard" class="btn">Dashboard Admin</a>
                 <a href="/pagos/crear" class="btn btn-primary">Nuevo Pago</a>
-                <a href="/pagos/estadisticas" class="btn btn-success">Ver Estadísticas</a>
             </nav>
         </header>
 
@@ -32,6 +31,7 @@
                                 <p><strong>Cliente:</strong> <%= pago.clienteNombre %></p>
                                 <p><strong>Fecha:</strong> <%= new Date(pago.fechaPago).toLocaleDateString('es-ES') %></p>
                                 <p><strong>Método:</strong> <%= pago.metodoPago %></p>
+                                <p><strong>Confirmación:</strong> <%= pago.numero_confirmacion %></p>
                                 <p><strong>ID:</strong> <%= pago.id %></p>
                             </div>
                             <div class="card-actions">

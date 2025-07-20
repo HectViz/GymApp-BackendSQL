@@ -64,11 +64,14 @@
                                 <div class="card card-small">
                                     <div class="card-header">
                                         <h4>$<%= parseFloat(pago.monto).toFixed(2) %></h4>
-                                        <span class="method"><%= pago.metodoPago %></span>
+                                        <span class="method <%= pago.metodoPago.toLowerCase() %>">
+                                            <%= pago.metodoPago %>
+                                        </span>
                                     </div>
                                     <div class="card-body">
                                         <p><strong>Fecha:</strong> <%= new Date(pago.fechaPago).toLocaleDateString('es-ES') %></p>
                                         <p><strong>Método:</strong> <%= pago.metodoPago %></p>
+                                        <p><strong>Confirmación:</strong> <%= pago.numero_confirmacion %></p>
                                     </div>
                                 </div>
                             <% }) %>

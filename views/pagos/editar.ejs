@@ -50,6 +50,12 @@
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="numero_confirmacion">Número de Confirmación:</label>
+                        <input type="text" id="numero_confirmacion" name="numero_confirmacion" value="<%= pago.numero_confirmacion %>" required>
+                        <small>Ingresa el número de confirmación de la transacción</small>
+                    </div>
+
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Actualizar Pago</button>
                         <a href="/pagos" class="btn btn-secondary">Cancelar</a>
@@ -66,8 +72,9 @@
             const fechaPago = document.getElementById('fechaPago').value;
             const monto = document.getElementById('monto').value;
             const metodoPago = document.getElementById('metodoPago').value;
+            const numeroConfirmacion = document.getElementById('numero_confirmacion').value.trim();
 
-            if (!clienteId || !fechaPago || !monto || !metodoPago) {
+            if (!clienteId || !fechaPago || !monto || !metodoPago || !numeroConfirmacion) {
                 e.preventDefault();
                 alert('Por favor, complete todos los campos');
                 return;
