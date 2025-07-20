@@ -3,6 +3,11 @@
 const express = require('express');
 const router = express.Router();
 const ClientesController = require('../controllers/ClientesController');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
+
+// Middleware de autenticación para todas las rutas
+router.use(authenticateToken);
+router.use(requireAdmin);
 
 // Rutas para vistas
 router.get('/', ClientesController.listar);
