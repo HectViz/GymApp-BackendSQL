@@ -56,12 +56,20 @@ class PagoController {
   // POST /pagos - CREAR UNO
   async agregar(req, res) {
     try {
-      const { clienteId, fechaPago, monto, metodoPago = 'Efectivo' } = req.body;
+      const { clienteId, fechaPago, monto, metodoPago = 'Efectivo', numero_confirmacion } = req.body;
       
       // Validación básica
-      if (!clienteId || !fechaPago || !monto) {
+      if (!clienteId || !fechaPago || !monto || !numero_confirmacion) {
         return res.status(400).json({ 
-          error: 'Todos los campos son requeridos' 
+          error: 'Todos los campos son requeridos, incluyendo el número de confirmación' 
+        });
+      }
+
+      // Verificar que el número de confirmación no exista
+      const existeConfirmacion = await Pago.checkNumeroConfirmacion(numero_confirmacion);
+      if (existeConfirmacion) {
+        return res.status(400).json({ 
+          error: 'El número de confirmación ya existe' 
         });
       }
 
@@ -69,7 +77,8 @@ class PagoController {
         clienteId: parseInt(clienteId), 
         fechaPago, 
         monto: parseFloat(monto), 
-        metodoPago 
+        metodoPago,
+        numero_confirmacion
       });
       
       if (req.xhr || req.headers.accept.indexOf('json') > -1) {
@@ -126,12 +135,12 @@ class PagoController {
   async actualizar(req, res) {
     try {
       const id = parseInt(req.params.id);
-      const { clienteId, fechaPago, monto, metodoPago } = req.body;
+      const { clienteId, fechaPago, monto, metodoPago, numero_confirmacion } = req.body;
 
       // Validación básica
-      if (!clienteId || !fechaPago || !monto || !metodoPago) {
+      if (!clienteId || !fechaPago || !monto || !metodoPago || !numero_confirmacion) {
         return res.status(400).json({ 
-          error: 'Todos los campos son requeridos' 
+          error: 'Todos los campos son requeridos, incluyendo el número de confirmación' 
         });
       }
 
@@ -139,7 +148,8 @@ class PagoController {
         clienteId: parseInt(clienteId), 
         fechaPago, 
         monto: parseFloat(monto), 
-        metodoPago 
+        metodoPago,
+        numero_confirmacion
       });
 
       if (!actualizado) {
@@ -195,7 +205,7 @@ class PagoController {
   // GET /pagos/estadisticas - OBTENER ESTADISTICAS DE PAGO
   async obtenerEstadisticas(req, res) {
     try {
-      const estadisticas = await Pago.getStats();
+      const estadisticas = await Pago.getEstadisticas();
       res.render('pagos/estadisticas', { estadisticas });
     } catch (error) {
       console.error('Error obteniendo estadísticas:', error);

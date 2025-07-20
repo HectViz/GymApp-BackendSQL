@@ -31,15 +31,31 @@ class Pago {
     }
   }
 
+  // OBTENER POR CLIENTE
+  static async findByClienteId(clienteId) {
+    try {
+      const [rows] = await pool.execute(`
+        SELECT p.*, c.nombre as clienteNombre 
+        FROM pagos p 
+        JOIN clientes c ON p.clienteId = c.id 
+        WHERE p.clienteId = ? 
+        ORDER BY p.fechaPago DESC
+      `, [clienteId]);
+      return rows;
+    } catch (error) {
+      throw new Error(`Error obteniendo pagos del cliente: ${error.message}`);
+    }
+  }
+
   // CREAR NUEVO
   static async create(pagoData) {
     try {
-      const { clienteId, fechaPago, monto, metodoPago = 'Efectivo' } = pagoData;
+      const { clienteId, fechaPago, monto, metodoPago, numero_confirmacion } = pagoData;
       const [result] = await pool.execute(
-        'INSERT INTO pagos (clienteId, fechaPago, monto, metodoPago) VALUES (?, ?, ?, ?)',
-        [clienteId, fechaPago, monto, metodoPago]
+        'INSERT INTO pagos (clienteId, fechaPago, monto, metodoPago, numero_confirmacion) VALUES (?, ?, ?, ?, ?)',
+        [clienteId, fechaPago, monto, metodoPago, numero_confirmacion]
       );
-      return { id: result.insertId, clienteId, fechaPago, monto, metodoPago };
+      return { id: result.insertId, clienteId, fechaPago, monto, metodoPago, numero_confirmacion };
     } catch (error) {
       throw new Error(`Error creando pago: ${error.message}`);
     }
@@ -48,10 +64,10 @@ class Pago {
   // ACTUALIZAR
   static async update(id, pagoData) {
     try {
-      const { clienteId, fechaPago, monto, metodoPago } = pagoData;
+      const { clienteId, fechaPago, monto, metodoPago, numero_confirmacion } = pagoData;
       const [result] = await pool.execute(
-        'UPDATE pagos SET clienteId = ?, fechaPago = ?, monto = ?, metodoPago = ? WHERE id = ?',
-        [clienteId, fechaPago, monto, metodoPago, id]
+        'UPDATE pagos SET clienteId = ?, fechaPago = ?, monto = ?, metodoPago = ?, numero_confirmacion = ? WHERE id = ?',
+        [clienteId, fechaPago, monto, metodoPago, numero_confirmacion, id]
       );
       return result.affectedRows > 0;
     } catch (error) {
@@ -69,41 +85,37 @@ class Pago {
     }
   }
 
-  // OBTENER PAGO POR CLIENTE
-  static async findByClienteId(clienteId) {
+  // OBTENER ESTADÍSTICAS
+  static async getEstadisticas() {
     try {
-      const [rows] = await pool.execute(
-        'SELECT * FROM pagos WHERE clienteId = ? ORDER BY fechaPago DESC',
-        [clienteId]
-      );
-      return rows;
-    } catch (error) {
-      throw new Error(`Error obteniendo pagos del cliente: ${error.message}`);
-    }
-  }
-
-  // OBTENER ESTADISTICAS DE PAGO
-  static async getStats() {
-    try {
-      const [totalResult] = await pool.execute('SELECT SUM(monto) as total FROM pagos');
-      const [monthlyResult] = await pool.execute(`
-        SELECT SUM(monto) as totalMensual 
-        FROM pagos 
-        WHERE MONTH(fechaPago) = MONTH(CURDATE()) AND YEAR(fechaPago) = YEAR(CURDATE())
-      `);
-      const [methodResult] = await pool.execute(`
+      const [totalResult] = await pool.execute('SELECT COUNT(*) as total FROM pagos');
+      const [montoTotalResult] = await pool.execute('SELECT SUM(monto) as total FROM pagos');
+      const [promedioResult] = await pool.execute('SELECT AVG(monto) as promedio FROM pagos');
+      
+      const [metodosResult] = await pool.execute(`
         SELECT metodoPago, COUNT(*) as cantidad, SUM(monto) as total
         FROM pagos 
         GROUP BY metodoPago
       `);
 
       return {
-        total: totalResult[0].total || 0,
-        totalMensual: monthlyResult[0].totalMensual || 0,
-        porMetodo: methodResult
+        total: totalResult[0].total,
+        montoTotal: montoTotalResult[0].total || 0,
+        promedio: promedioResult[0].promedio || 0,
+        porMetodo: metodosResult
       };
     } catch (error) {
       throw new Error(`Error obteniendo estadísticas: ${error.message}`);
+    }
+  }
+
+  // VERIFICAR SI NUMERO DE CONFIRMACION EXISTE
+  static async checkNumeroConfirmacion(numero_confirmacion) {
+    try {
+      const [rows] = await pool.execute('SELECT id FROM pagos WHERE numero_confirmacion = ?', [numero_confirmacion]);
+      return rows.length > 0;
+    } catch (error) {
+      throw new Error(`Error verificando número de confirmación: ${error.message}`);
     }
   }
 }
