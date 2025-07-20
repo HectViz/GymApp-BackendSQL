@@ -3,79 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GymApp - Gestión de Gimnasio</title>
+    <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🏋️ GymApp</h1>
-            <p>Sistema de Gestión de Gimnasio</p>
+            <h1>🏋️‍♂️ GymApp</h1>
+            <p>El Gimnasio para todos</p>
+            
+            <% if (user) { %>
+                <!-- Usuario logueado -->
+                <div class="user-info">
+                    <div class="user-details">
+                        <p>👤 <strong><%= user.email %></strong></p>
+                        <p>Rol: <span class="role-badge <%= user.tipo %>"><%= user.tipo === 'admin' ? 'Administrador' : 'Cliente' %></span></p>
+                    </div>
+                    <nav class="user-nav">
+                        <% if (user.tipo === 'admin') { %>
+                            <a href="/admin/dashboard" class="btn btn-primary">Dashboard Admin</a>
+                        <% } else { %>
+                            <a href="/cliente/dashboard" class="btn btn-primary">Mi Dashboard</a>
+                        <% } %>
+                        <form action="/auth/logout" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                        </form>
+                    </nav>
+                </div>
+            <% } else { %>
+                <!-- Usuario no logueado -->
+                <nav>
+                    <a href="/auth/login" class="btn btn-primary">Iniciar Sesión</a>
+                    <a href="/auth/register" class="btn btn-success">Registrarse</a>
+                </nav>
+            <% } %>
         </header>
 
         <main>
-            <div class="grid">
-                <!-- Módulo de Clientes -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>👥 Clientes</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Administra la información de todos los clientes del gimnasio.</p>
-                        <ul style="margin-top: 15px; padding-left: 20px; color: #666;">
-                            <li>Registrar nuevos clientes</li>
-                            <li>Ver información detallada</li>
-                            <li>Editar datos personales</li>
-                            <li>Gestionar membresías</li>
-                        </ul>
-                    </div>
-                    <div class="card-actions">
-                        <a href="/clientes" class="btn btn-primary">Ver Clientes</a>
-                        <a href="/clientes/crear" class="btn btn-success">Nuevo Cliente</a>
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h2>El Gimnasio para todos</h2>
+                    <p>¡Únete ahora y transforma tu vida!</p>
+                    
+                    <% if (!user) { %>
+                        <div class="cta-buttons">
+                            <a href="/auth/register" class="btn btn-primary btn-large">¡Únete Ahora!</a>
+                            <a href="/auth/login" class="btn btn-secondary btn-large">Ya soy miembro</a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Disclaimer para primera compra -->
+            <% if (!user) { %>
+                <div class="disclaimer-section">
+                    <div class="disclaimer-card">
+                        <div class="disclaimer-icon">🎁</div>
+                        <div class="disclaimer-content">
+                            <h3>¡Oferta especial para nuevos miembros!</h3>
+                            <p>Si es tu primera compra, obtén <strong>1 mes gratis</strong> en cualquier plan de membresía.</p>
+                        </div>
                     </div>
                 </div>
+            <% } %>
 
-                <!-- Módulo de Membresías -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>🎫 Membresías</h3>
+            <!-- Membresías -->
+            <div class="memberships-section">
+                <h2>Nuestras Membresías</h2>
+                <p class="section-subtitle">Elige el plan que mejor se adapte a ti</p>
+                
+                <div class="grid">
+                    <div class="membership-card">
+                        <div class="membership-header">
+                            <h3>Mensual</h3>
+                            <div class="price">$49.99<span>/mes</span></div>
+                        </div>
+                        <div class="membership-features">
+                            <ul>
+                                <li>✅ Acceso completo al gimnasio</li>
+                                <li>✅ Clases grupales incluidas</li>
+                                <li>✅ Equipos de última generación</li>
+                                <li>✅ Piscina y sauna</li>
+                                <li>✅ Horario: 6AM - 10PM</li>
+                                <li>✅ Locker personal</li>
+                            </ul>
+                        </div>
+                        <div class="membership-actions">
+                            <% if (!user) { %>
+                                <a href="/auth/register" class="btn btn-primary">Elegir Plan</a>
+                            <% } %>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <p>Controla las membresías y suscripciones de los clientes.</p>
-                        <ul style="margin-top: 15px; padding-left: 20px; color: #666;">
-                            <li>Crear nuevas membresías</li>
-                            <li>Ver membresías activas</li>
-                            <li>Gestionar fechas de vencimiento</li>
-                            <li>Controlar estados</li>
-                        </ul>
+                    
+                    <div class="membership-card">
+                        <div class="membership-header">
+                            <h3>Trimestral</h3>
+                            <div class="price">$129.99<span>/3 meses</span></div>
+                            <div class="discount">Ahorras $19.98</div>
+                        </div>
+                        <div class="membership-features">
+                            <ul>
+                                <li>✅ Acceso completo al gimnasio</li>
+                                <li>✅ Clases grupales incluidas</li>
+                                <li>✅ Equipos de última generación</li>
+                                <li>✅ Piscina y sauna</li>
+                                <li>✅ Horario: 6AM - 10PM</li>
+                                <li>✅ Locker personal</li>
+                            </ul>
+                        </div>
+                        <div class="membership-actions">
+                            <% if (!user) { %>
+                                <a href="/auth/register" class="btn btn-primary">Elegir Plan</a>
+                            <% } %>
+                        </div>
                     </div>
-                    <div class="card-actions">
-                        <a href="/membresias" class="btn btn-primary">Ver Membresías</a>
-                        <a href="/membresias/crear" class="btn btn-success">Nueva Membresía</a>
+                    
+                    <div class="membership-card featured">
+                        <div class="membership-header">
+                            <h3>Semestral</h3>
+                            <div class="price">$239.99<span>/6 meses</span></div>
+                            <div class="discount">Ahorras $59.95</div>
+                            <div class="bonus">+ Entrenador Personal</div>
+                        </div>
+                        <div class="membership-features">
+                            <ul>
+                                <li>✅ Acceso completo al gimnasio</li>
+                                <li>✅ Clases grupales incluidas</li>
+                                <li>✅ Equipos de última generación</li>
+                                <li>✅ Piscina y sauna</li>
+                                <li>✅ Horario: 6AM - 10PM</li>
+                                <li>✅ Locker personal</li>
+                                <li>🎯 <strong>Entrenador personal incluido</strong></li>
+                            </ul>
+                        </div>
+                        <div class="membership-actions">
+                            <% if (!user) { %>
+                                <a href="/auth/register" class="btn btn-primary">Elegir Plan</a>
+                            <% } %>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Módulo de Pagos -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>💰 Pagos</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Administra los pagos y transacciones del gimnasio.</p>
-                        <ul style="margin-top: 15px; padding-left: 20px; color: #666;">
-                            <li>Registrar nuevos pagos</li>
-                            <li>Ver historial de pagos</li>
-                            <li>Consultar estadísticas</li>
-                            <li>Gestionar métodos de pago</li>
-                        </ul>
-                    </div>
-                    <div class="card-actions">
-                        <a href="/pagos" class="btn btn-primary">Ver Pagos</a>
-                        <a href="/pagos/crear" class="btn btn-success">Nuevo Pago</a>
+                    
+                    <div class="membership-card">
+                        <div class="membership-header">
+                            <h3>Anual</h3>
+                            <div class="price">$419.99<span>/12 meses</span></div>
+                            <div class="discount">Ahorras $179.89</div>
+                            <div class="bonus">+ Entrenador Personal</div>
+                        </div>
+                        <div class="membership-features">
+                            <ul>
+                                <li>✅ Acceso completo al gimnasio</li>
+                                <li>✅ Clases grupales incluidas</li>
+                                <li>✅ Equipos de última generación</li>
+                                <li>✅ Piscina y sauna</li>
+                                <li>✅ Horario: 6AM - 10PM</li>
+                                <li>✅ Locker personal</li>
+                                <li>🎯 <strong>Entrenador personal incluido</strong></li>
+                            </ul>
+                        </div>
+                        <div class="membership-actions">
+                            <% if (!user) { %>
+                                <a href="/auth/register" class="btn btn-primary">Elegir Plan</a>
+                            <% } %>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Información de contacto -->
+            <div class="contact-section">
+                <h2>¿Necesitas ayuda?</h2>
+                <div class="contact-info">
+                    <p>📧 Email: info@gymapp.com</p>
+                    <p>📞 Teléfono: (555) 123-4567</p>
+                    <p>📍 Dirección: Calle Principal #123, Ciudad</p>
+                    <p>🕒 Horario: Lunes a Domingo 6:00 AM - 10:00 PM</p>
+                </div>
+            </div>
         </main>
+
+        <footer>
+            <p>&copy; 2024 GymApp. Todos los derechos reservados.</p>
+        </footer>
     </div>
 </body>
 </html>
