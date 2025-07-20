@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Membresías - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎫 Mis Membresías</h1>
+            <nav>
+                <a href="/cliente/dashboard" class="btn">Mi Dashboard</a>
+                <a href="/cliente/pagos" class="btn">Mis Pagos</a>
+            </nav>
+        </header>
+
+        <main>
+            <% if (membresias && membresias.length > 0) { %>
+                <div class="grid">
+                    <% membresias.forEach(membresia => { %>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><%= membresia.tipo %></h3>
+                                <span class="status <%= membresia.estado.toLowerCase() %>">
+                                    <%= membresia.estado %>
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Fecha de Inicio:</strong> <%= new Date(membresia.fechaInicio).toLocaleDateString('es-ES') %></p>
+                                <p><strong>Fecha de Vencimiento:</strong> <%= new Date(membresia.fechaVencimiento).toLocaleDateString('es-ES') %></p>
+                                <p><strong>Registrada:</strong> <%= new Date(membresia.created_at).toLocaleDateString('es-ES') %></p>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <h3>No tienes membresías registradas</h3>
+                    <p>Contacta con el administrador para activar tu membresía.</p>
+                </div>
+            <% } %>
+        </main>
+    </div>
+</body>
+</html> 
