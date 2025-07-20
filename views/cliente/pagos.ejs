@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pagos - GymApp</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Mis Pagos</h1>
+            <nav>
+                <a href="/cliente/dashboard" class="btn">Mi Dashboard</a>
+                <a href="/cliente/pagos/crear" class="btn btn-success">Nuevo Pago</a>
+            </nav>
+        </header>
+
+        <main>
+            <% if (pagos && pagos.length > 0) { %>
+                <div class="grid">
+                    <% pagos.forEach(pago => { %>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>$<%= parseFloat(pago.monto).toFixed(2) %></h3>
+                                <span class="method <%= pago.metodoPago.toLowerCase() %>">
+                                    <%= pago.metodoPago %>
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Fecha:</strong> <%= new Date(pago.fechaPago).toLocaleDateString('es-ES') %></p>
+                                <p><strong>Número de Confirmación:</strong> <%= pago.numero_confirmacion %></p>
+                                <p><strong>Registrado:</strong> <%= new Date(pago.created_at).toLocaleDateString('es-ES') %></p>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <h3>No tienes pagos registrados</h3>
+                    <p>Registra tu primer pago para comenzar.</p>
+                    <a href="/cliente/pagos/crear" class="btn btn-primary">Registrar Pago</a>
+                </div>
+            <% } %>
+        </main>
+    </div>
+</body>
+</html> 
